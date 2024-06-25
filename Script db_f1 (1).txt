@@ -1,0 +1,36 @@
+create database db_f1;
+use  db_f1;
+
+CREATE TABLE usuarios (
+id int primary key auto_increment,
+correo varchar(50) not null,
+contraseña varchar(50) not null,
+rol int not null
+);
+CREATE TABLE clientes(
+	IDCLIENTE INT PRIMARY KEY AUTO_INCREMENT,
+    NOMBRE VARCHAR(255) NOT NULL,
+    APELLIDO VARCHAR(255) NOT NULL,
+	EDAD INT NOT NULL,
+    FECHA DATE NOT NULL,
+    DIRECCION VARCHAR(255) NOT NULL,
+    CLAVE VARCHAR(255) NOT NULL,
+    VALIDACIONCLAVE VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE imagenes(
+id INT PRIMARY KEY AUTO_INCREMENT,
+Nombre VARCHAR(100),
+Descripcion VARCHAR(100),
+Imagen TEXT
+);
+
+
+-- Insertar un registro de prueba (opcional)
+
+INSERT INTO usuarios (correo,contraseña, rol)
+VALUES
+ ('profe@profe.cl', '123456', 1);
+ ('alumno@alumno.cl', '123456', 2);
+INSERT INTO clientes (nombre,apellido,edad, fecha, direccion, clave, VALIDACIONCLAVE)
+VALUES ('Juan', 'Perez', 30, '1993-05-21', 'Calle Falsa 123', 'password123','password123');

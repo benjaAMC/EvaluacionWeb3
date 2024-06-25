@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/estilotabla.css"> <!-- Tu CSS personalizado -->
+    <title>Listar Usuarios</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> <!-- Incluye Bootstrap CSS -->
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="articulos.html">Tienda</a></li>
+            <li><a href="calendario.html">Calendario</a></li>
+        </ul>
+    </nav>
+    <h2>Usuarios</h2>
+    <table class="table"> <!-- Clase de Bootstrap para la tabla -->
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Edad</th> 
+                <th>Acciones</th>                 
+            </tr>
+        </thead>
+        <tbody id="usuarios-list"></tbody>
+    </table>
+
+    <!-- Modal para mostrar detalles del usuario -->
+    <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userModalLabel">Detalles del Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="modal-content"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para modificar usuario -->
+    <div class="modal fade" id="modificarModal" tabindex="-1" aria-labelledby="modificarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modificarModalLabel">Modificar Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="modificar-form">
+                        <input type="hidden" id="modificar-id" name="IDCLIENTE">
+                        <div class="mb-3">
+                            <label for="modificar-nombre" class="form-label">Nombre:</label>
+                            <input type="text" id="modificar-nombre" name="nombre" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modificar-apellido" class="form-label">Apellido:</label>
+                            <input type="text" id="modificar-apellido" name="apellido" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modificar-edad" class="form-label">Edad:</label>
+                            <input type="number" id="modificar-edad" name="edad" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modificar-fecha" class="form-label">Fecha de nacimiento:</label>
+                            <input type="date" id="modificar-fecha" name="fecha_nacimiento" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modificar-direccion" class="form-label">Dirección:</label>
+                            <input type="text" id="modificar-direccion" name="direccion" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modificar-contraseña" class="form-label">Contraseña:</label>
+                            <input type="password" id="modificar-contraseña" name="contraseña" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modificar-verificacion" class="form-label">Validación Contraseña:</label>
+                            <input type="password" id="modificar-verificacion" name="verificacionContraseña" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para confirmar eliminación de usuario -->
+    <div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="eliminarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eliminarModalLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro de que deseas eliminar este usuario?</p>
+                    <input type="hidden" id="eliminar-id">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmar-eliminar-btn">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function () {
+            fetch('/usuarios')
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                var usuariosList = document.getElementById('usuarios-list');
+                data.forEach(function(usuario) {
+                    var row = document.createElement('tr');
+                    row.innerHTML = '<td>' + usuario.NOMBRE + '</td>' +
+                                    '<td>' + usuario.APELLIDO + '</td>' +
+                                    '<td>' + usuario.EDAD + '</td>' +
+                                    '<td>' +
+                                        '<button class="btn btn-info" onclick="mostrarDetalles(' + usuario.IDCLIENTE + ')">Detalles</button>' +
+                                        '<button class="btn btn-danger" onclick="mostrarModalEliminar(' + usuario.IDCLIENTE + ')">Eliminar</button>' +
+                                        '<button class="btn btn-primary" onclick="mostrarModalModificar(' + usuario.IDCLIENTE + ')">Modificar</button>' +
+                                    '</td>';
+                    usuariosList.appendChild(row);
+                });
+            });
+        };
+
+        function mostrarDetalles(IDCLIENTE) {
+            fetch('/usuarios/' + IDCLIENTE)
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(usuario) {
+                var fechaFormateada = new Date(usuario.FECHA).toISOString().split('T')[0];
+                var modalContent = document.getElementById('modal-content');
+                modalContent.innerHTML = '<p>ID: ' + usuario.IDCLIENTE + '</p>' +
+                                         '<p>Nombre: ' + usuario.NOMBRE + '</p>' +
+                                         '<p>Apellido: ' + usuario.APELLIDO + '</p>' +
+                                         '<p>Edad: ' + usuario.EDAD + '</p>' +
+                                         '<p>Fecha: ' + fechaFormateada + '</p>' +
+                                         '<p>Dirección: ' + usuario.DIRECCION + '</p>' +
+                                         '<p>Clave: ' + usuario.CLAVE + '</p>' +
+                                         '<p>Validación Clave: ' + usuario.VALIDACIONCLAVE + '</p>';
+                var userModal = new bootstrap.Modal(document.getElementById('userModal'));
+                userModal.show();
+            });
+        }
+
+        function mostrarModalModificar(IDCLIENTE) {
+            fetch('/usuarios/' + IDCLIENTE)
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(usuario) {
+                var fechaFormateada = new Date(usuario.FECHA).toISOString().split('T')[0];
+                document.getElementById('modificar-id').value = usuario.IDCLIENTE;
+                document.getElementById('modificar-nombre').value = usuario.NOMBRE;
+                document.getElementById('modificar-apellido').value = usuario.APELLIDO;
+                document.getElementById('modificar-edad').value = usuario.EDAD;
+                document.getElementById('modificar-fecha').value = fechaFormateada;
+                document.getElementById('modificar-direccion').value = usuario.DIRECCION;
+                document.getElementById('modificar-contraseña').value = usuario.CLAVE;
+                document.getElementById('modificar-verificacion').value = usuario.VALIDACIONCLAVE;
+
+                var modificarModal = new bootstrap.Modal(document.getElementById('modificarModal'));
+                modificarModal.show();
+            });
+        }
+
+        document.getElementById('modificar-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            var IDCLIENTE = document.getElementById('modificar-id').value;
+            var nombre = document.getElementById('modificar-nombre').value;
+            var apellido = document.getElementById('modificar-apellido').value;
+            var edad = document.getElementById('modificar-edad').value;
+            var fecha_nacimiento = document.getElementById('modificar-fecha').value;
+            var direccion = document.getElementById('modificar-direccion').value;
+            var contraseña = document.getElementById('modificar-contraseña').value;
+            var verificacionContraseña = document.getElementById('modificar-verificacion').value;
+
+            fetch('/modificar_usuario', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    IDCLIENTE: IDCLIENTE,
+                    nombre: nombre,
+                    apellido: apellido,
+                    edad: edad,
+                    fecha_nacimiento: fecha_nacimiento,
+                    direccion: direccion,
+                    contraseña: contraseña,
+                    verificacionContraseña: verificacionContraseña
+                })
+            })
+            .then(function(response) {
+                if (response.ok) {
+                    console.log('Usuario modificado correctamente.');
+                    window.location.reload();
+                } else {
+                    console.error('Error al modificar usuario.');
+                }
+            })
+            .catch(function(error) {
+                console.error('Error en la solicitud:', error);
+            });
+        });
+
+        function mostrarModalEliminar(IDCLIENTE) {
+            document.getElementById('eliminar-id').value = IDCLIENTE;
+            var eliminarModal = new bootstrap.Modal(document.getElementById('eliminarModal'));
+            eliminarModal.show();
+        }
+
+        document.getElementById('confirmar-eliminar-btn').addEventListener('click', function() {
+            var IDCLIENTE = document.getElementById('eliminar-id').value;
+            fetch('/eliminar_usuario/' + IDCLIENTE, {
+                method: 'DELETE'
+            })
+            .then(function(response) {
+                if (response.ok) {
+                    console.log('Usuario eliminado correctamente.');
+                    window.location.reload();
+                } else {
+                    console.error('Error al eliminar usuario.');
+                }
+            })
+            .catch(function(error) {
+                console.error('Error en la solicitud:', error);
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> <!-- Incluye Bootstrap JS -->
+</body>
+</html>

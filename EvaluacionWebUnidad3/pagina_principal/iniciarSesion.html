@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="css/estiloInicio.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            
+            <li><a href="articulos.html">Tienda</a></li>
+            <li><a href="calendario.html">Calendario</a></li>
+        </ul>
+    </nav>
+    <div class="formulario-inicio">
+        <form class="form-acceso" id="FormularioAcceso" action="/iniciar_sesion" method="POST">
+            <div class="form-header">
+                <h4>Iniciar Sesión</h4>
+                <hr class="linea-roja">
+            </div>
+            <div class="form-group">
+                <label for="correo">Correo:</label>
+                <input type="text" id="correo" name="correo" class="controls" placeholder="Correo" required>
+            </div>
+            <div class="form-group">
+                <label for="contraseña">Contraseña:</label>
+                <input type="password" id="contraseña" name="contraseña" class="controls" placeholder="Contraseña" required>
+            </div>            
+            <div class="form-group">
+                <button type="submit" class="button">Ingresar</button>
+            </div>
+            <div class="form-footer">
+                <p><a href="index.html">¿Aún no tienes una cuenta?</a></p>
+            </div>
+        </form>
+    </div>
+    <script src="/app.js"></script>
+</body>
+</html>

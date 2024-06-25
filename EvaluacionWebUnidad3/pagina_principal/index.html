@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuario</title>
+    <link rel="stylesheet" href="css/estiloFormulario.css">
+    <script type="module" src="js/validaciones.js"></script>
+
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="iniciarSesion.html">Eres Administrador?</a></li>            
+            <li><a href="articulos.html">Tienda</a></li>
+            <li><a href="calendario.html">Calendario</a></li>
+            <li><a href="q.html">Imagenes</a></li>
+        </ul>
+    </nav>
+    <div class="formulario-registro">
+        <form class="form-acceso" id="FormularioRegistro" action="/guardar_usuario" method="post" onSubmit="return valida();" >
+            <div class="form-header">
+                <h4>Registro de Usuario</h4>
+                <hr class="linea-roja">
+            </div>
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" class="controls" placeholder="Ingrese su nombre" >
+            </div>
+            <div class="form-group">
+                <label for="apellido">Apellido:</label>
+                <input type="text" id="apellido" name="apellido" class="controls" placeholder="Ingrese su apellido" required>
+            </div>
+            <div class="form-group">
+                <label for="edad">Edad:</label>
+                <input type="number" id="edad" name="edad" class="controls" placeholder="Ingrese su edad" required>
+            </div>
+            <div class="form-group">
+                <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+                <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" class="controls" required>
+            </div>
+            <div class="form-group">
+                <label for="direccion">Dirección:</label>
+                <input type="text" id="direccion" name="direccion" class="controls" placeholder="Ingrese su dirección" required>
+            </div>
+            <div class="form-group">
+                <label for="contraseña">Contraseña:</label>
+                <input type="password" id="contraseña" name="contraseña" class="controls" placeholder="Ingrese su contraseña" required>
+            </div>
+            <div class="form-group">
+                <label for="verificacionContraseña">Verificación de Contraseña:</label>
+                <input type="password" id="verificacionContraseña" name="verificacionContraseña" class="controls" placeholder="Ingrese nuevamente su contraseña" required>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="button">Registrar</button>
+            </div>
+            <div class="form-footer">
+                <p><a href="IniciarSesion.html">¿Ya tienes una cuenta?</a></p>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" src="js/validaciones.js"></script>
+</body>
+</html>

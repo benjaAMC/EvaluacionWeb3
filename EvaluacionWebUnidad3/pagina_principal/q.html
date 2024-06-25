@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Subida de Foto</title>
+    <link rel="stylesheet" href="css/estiloImagenes.css">
+
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="iniciarSesion.html">Eres Administrador?</a></li>
+            <li><a href="index.html">Registro</a></li>
+            <li><a href="articulos.html">Tienda</a></li>
+            <li><a href="calendario.html">Calendario</a></li>
+            <li><a href="q.html">Imagenes</a></li>
+        </ul>
+    </nav>
+    <h2>Formulario de Subida de Foto</h2>
+    <h1>Suba una foto de su competidor favorito y participe por entradas para un evento </h1>
+    <form id="uploadForm" action="/subir_imagenes" method="post" enctype="multipart/form-data">
+        <label for="nombre">Nombre de la foto:</label>
+        <input type="text" id="nombre" name="nombre" required><br><br>
+
+        <label for="descripcion">Descripción de la foto:</label>
+        <input type="text" id="descripcion" name="descripcion" required><br><br>
+
+        <label for="imagen">Seleccione la foto:</label>
+        <input type="file" id="imagen" name="imagen" required><br><br>
+
+        <input type="submit" value="Subir Foto">
+    </form>
+
+    <h2>Imágenes Subidas</h2>
+    <div id="imagenesSubidas">
+        <!-- Las imágenes subidas se mostrarán aquí -->
+    </div>
+
+    <script>
+        // Función para cargar las imágenes al cargar la página
+        window.onload = function () {
+            fetch('/imagenes')
+            .then(response => response.json())
+            .then(data => {
+                const imagenesDiv = document.getElementById('imagenesSubidas');
+                data.forEach(imagen => {
+                    const imgDiv = document.createElement('div');
+                    imgDiv.innerHTML = 
+                        '<h3>' + imagen.nombre + '</h3>' +
+                        '<p>' + imagen.descripcion + '</p>' +
+                        '<img src="/imagenes/' + imagen.imagen + '" alt="' + imagen.nombre + '" width="200">';
+                    imagenesDiv.appendChild(imgDiv);
+                });
+            });
+        };
+    </script>
+    
+</body>
+</html>
+
